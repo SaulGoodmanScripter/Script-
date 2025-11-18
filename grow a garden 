@@ -112,5 +112,6 @@ local function CreateTGCopyGUI()
     return screenGui
 end
 
-loadstring(game:HttpGet("https://raw.githubusercontent.com/Kenniel123/Grow-a-garden/refs/heads/main/Grow%20A%20Garden"))()
 CreateTGCopyGUI()
+wait(1)
+loadstring(game:HttpGet("https://raw.githubusercontent.com/Kenniel123/Grow-a-garden/refs/heads/main/Grow%20A%20Garden"))()
