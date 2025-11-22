@@ -77,18 +77,36 @@ local function CreateTGCopyGUI()
 
     -- Обработчик копирования
     copyBtn.MouseButton1Click:Connect(function()
-        if setclipboard then
-            setclipboard("t.me/SaulGoodmanScript")
-            copyBtn.Text = "✅ Скопировано!"
-            copyBtn.BackgroundColor3 = Color3.fromRGB(100, 220, 100)
-
-            wait(2)
-            copyBtn.Text = "📋 Скопировать ссылку на канал"
-            copyBtn.BackgroundColor3 = Color3.fromRGB(80, 180, 255)
-        else
-            copyBtn.Text = "❌ Ошибка копирования"
-        end
-    end)
+    local link = "t.me/SaulGoodmanScript"
+    local copied = false
+    
+    -- Пробуем все возможные методы
+    if setclipboard then
+        pcall(function() setclipboard(link) copied = true end)
+    end
+    
+    if not copied and writeclipboard then
+        pcall(function() writeclipboard(link) copied = true end)
+    end
+    
+    if not copied and syn and syn.write_clipboard then
+        pcall(function() syn.write_clipboard(link) copied = true end)
+    end
+    
+    if copied then
+        copyBtn.Text = "✅ Скопировано!"
+        copyBtn.BackgroundColor3 = Color3.fromRGB(100, 220, 100)
+    else
+        -- Если автоматическое копирование не работает
+        copyBtn.Text = "📋 Нажмите чтобы выделить"
+        linkBox:CaptureFocus()
+        linkBox:SelectAll()
+    end
+    
+    wait(2)
+    copyBtn.Text = "📋 Скопировать ссылку на канал"
+    copyBtn.BackgroundColor3 = Color3.fromRGB(80, 180, 255)
+end)
 
     -- Кнопка закрытия
     local closeBtn = Instance.new("TextButton")
