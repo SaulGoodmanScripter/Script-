@@ -1,15 +1,6 @@
 local SoundService = game:GetService("SoundService")
 local TweenService = game:GetService("TweenService")
 
--- Библиотека песен
-local MusicLibrary = {
-    ["1841647093"] = "Raining Tacos 🌮",
-    ["1848354536"] = "Mystery Movie 🎬",
-    ["9115040999"] = "Lofi Hip Hop 🎧",
-    ["4590662796"] = "Synthwave 🌃",
-    ["6952524897"] = "Chill Vibes 😎"
-}
-
 -- Цветовая схема Saul Hub
 local SAUL_COLORS = {
     Background = Color3.fromRGB(25, 25, 35),
@@ -39,7 +30,7 @@ local function PlayMusic(soundId, songName)
     sound:Play()
     
     currentSound = sound
-    print("🎵 Сейчас играет: " .. (songName or soundId))
+    print("🎵 Сейчас играет: " .. (songName or "ID: " .. soundId))
     return sound
 end
 
@@ -49,7 +40,7 @@ ScreenGui.Name = "SaulHubMusicPlayer"
 ScreenGui.ZIndexBehavior = Enum.ZIndexBehavior.Sibling
 
 local MainFrame = Instance.new("Frame")
-MainFrame.Size = UDim2.new(0, 350, 0, 300)
+MainFrame.Size = UDim2.new(0, 350, 0, 200) -- Уменьшили высоту
 MainFrame.Position = UDim2.new(0, 20, 0, 20)
 MainFrame.BackgroundColor3 = SAUL_COLORS.Background
 MainFrame.BorderSizePixel = 0
@@ -150,67 +141,11 @@ local StopCorner = Instance.new("UICorner")
 StopCorner.CornerRadius = UDim.new(0, 8)
 StopCorner.Parent = StopButton
 
--- Список песен
-local SongsLabel = Instance.new("TextLabel")
-SongsLabel.Size = UDim2.new(1, -20, 0, 20)
-SongsLabel.Position = UDim2.new(0, 10, 0, 220)
-SongsLabel.BackgroundTransparency = 1
-SongsLabel.Text = "📚 Библиотека песен:"
-SongsLabel.TextColor3 = SAUL_COLORS.Text
-SongsLabel.Font = Enum.Font.GothamBold
-SongsLabel.TextSize = 12
-SongsLabel.TextXAlignment = Enum.TextXAlignment.Left
-SongsLabel.Parent = MainFrame
-
--- Фрейм для кнопок песен
-local SongsFrame = Instance.new("Frame")
-SongsFrame.Size = UDim2.new(1, -20, 0, 50)
-SongsFrame.Position = UDim2.new(0, 10, 0, 240)
-SongsFrame.BackgroundTransparency = 1
-SongsFrame.Parent = MainFrame
-
--- Создаем кнопки для песен из библиотеки
-local function CreateSongButton(songId, songName, position)
-    local button = Instance.new("TextButton")
-    button.Size = UDim2.new(0.48, 0, 0, 40)
-    button.Position = position
-    button.BackgroundColor3 = SAUL_COLORS.Button
-    button.TextColor3 = SAUL_COLORS.Text
-    button.Text = songName
-    button.Font = Enum.Font.Gotham
-    button.TextSize = 11
-    button.TextWrapped = true
-    button.Parent = SongsFrame
-    
-    local corner = Instance.new("UICorner")
-    corner.CornerRadius = UDim.new(0, 6)
-    corner.Parent = button
-    
-    button.MouseButton1Click:Connect(function()
-        PlayMusic(songId, songName)
-        InputBox.Text = songId
-    end)
-    
-    return button
-end
-
--- Добавляем песни из библиотеки
-local songIndex = 1
-for songId, songName in pairs(MusicLibrary) do
-    local position = UDim2.new(0, 0, 0, (songIndex-1)*45)
-    if songIndex > 1 then
-        position = UDim2.new(0.52, 0, 0, (songIndex-2)*45)
-    end
-    CreateSongButton(songId, songName, position)
-    songIndex = songIndex + 1
-end
-
 -- Обработчики событий
 PlayButton.MouseButton1Click:Connect(function()
     local songId = InputBox.Text
     if songId ~= "" then
-        local songName = MusicLibrary[songId] or "Custom Song"
-        PlayMusic(songId, songName)
+        PlayMusic(songId, "Custom Song")
     end
 end)
 
@@ -251,4 +186,4 @@ end)
 ScreenGui.Parent = game.CoreGui
 
 print("🎵 Saul Hub Music Player loaded!")
-print("📚 Available songs: Raining Tacos, Mystery Movie")
+print("💡 Вводи любые ID музыки из Roblox Library")
