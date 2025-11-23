@@ -1,0 +1,254 @@
+local SoundService = game:GetService("SoundService")
+local TweenService = game:GetService("TweenService")
+
+-- Библиотека песен
+local MusicLibrary = {
+    ["1841647093"] = "Raining Tacos 🌮",
+    ["1848354536"] = "Mystery Movie 🎬",
+    ["9115040999"] = "Lofi Hip Hop 🎧",
+    ["4590662796"] = "Synthwave 🌃",
+    ["6952524897"] = "Chill Vibes 😎"
+}
+
+-- Цветовая схема Saul Hub
+local SAUL_COLORS = {
+    Background = Color3.fromRGB(25, 25, 35),
+    Header = Color3.fromRGB(45, 35, 60),
+    Button = Color3.fromRGB(65, 45, 85),
+    ButtonHover = Color3.fromRGB(85, 65, 105),
+    ButtonSuccess = Color3.fromRGB(80, 180, 80),
+    ButtonError = Color3.fromRGB(220, 80, 80),
+    Text = Color3.fromRGB(255, 255, 255),
+    Accent = Color3.fromRGB(140, 70, 160),
+    Search = Color3.fromRGB(40, 40, 55)
+}
+
+local currentSound = nil
+
+local function PlayMusic(soundId, songName)
+    if currentSound then
+        currentSound:Stop()
+        currentSound:Destroy()
+    end
+    
+    local sound = Instance.new("Sound")
+    sound.SoundId = "rbxassetid://" .. soundId
+    sound.Looped = true
+    sound.Volume = 0.5
+    sound.Parent = SoundService
+    sound:Play()
+    
+    currentSound = sound
+    print("🎵 Сейчас играет: " .. (songName or soundId))
+    return sound
+end
+
+-- Создание GUI
+local ScreenGui = Instance.new("ScreenGui")
+ScreenGui.Name = "SaulHubMusicPlayer"
+ScreenGui.ZIndexBehavior = Enum.ZIndexBehavior.Sibling
+
+local MainFrame = Instance.new("Frame")
+MainFrame.Size = UDim2.new(0, 350, 0, 300)
+MainFrame.Position = UDim2.new(0, 20, 0, 20)
+MainFrame.BackgroundColor3 = SAUL_COLORS.Background
+MainFrame.BorderSizePixel = 0
+MainFrame.Parent = ScreenGui
+
+local UICorner = Instance.new("UICorner")
+UICorner.CornerRadius = UDim.new(0, 8)
+UICorner.Parent = MainFrame
+
+local UIStroke = Instance.new("UIStroke")
+UIStroke.Color = SAUL_COLORS.Accent
+UIStroke.Thickness = 2
+UIStroke.Parent = MainFrame
+
+-- Хедер
+local HeaderFrame = Instance.new("Frame")
+HeaderFrame.Size = UDim2.new(1, 0, 0, 60)
+HeaderFrame.BackgroundColor3 = SAUL_COLORS.Header
+HeaderFrame.BorderSizePixel = 0
+HeaderFrame.Parent = MainFrame
+
+local HeaderCorner = Instance.new("UICorner")
+HeaderCorner.CornerRadius = UDim.new(0, 8)
+HeaderCorner.Parent = HeaderFrame
+
+local TitleLabel = Instance.new("TextLabel")
+TitleLabel.Size = UDim2.new(1, 0, 0.6, 0)
+TitleLabel.Position = UDim2.new(0, 0, 0, 5)
+TitleLabel.BackgroundTransparency = 1
+TitleLabel.Text = "🎵 Music Player"
+TitleLabel.TextColor3 = SAUL_COLORS.Text
+TitleLabel.TextScaled = true
+TitleLabel.Font = Enum.Font.GothamBold
+TitleLabel.Parent = HeaderFrame
+
+local SubtitleLabel = Instance.new("TextLabel")
+SubtitleLabel.Size = UDim2.new(1, 0, 0.4, 0)
+SubtitleLabel.Position = UDim2.new(0, 0, 0, 35)
+SubtitleLabel.BackgroundTransparency = 1
+SubtitleLabel.Text = "for Saul Hub"
+SubtitleLabel.TextColor3 = SAUL_COLORS.Accent
+SubtitleLabel.TextScaled = true
+SubtitleLabel.Font = Enum.Font.Gotham
+SubtitleLabel.Parent = HeaderFrame
+
+-- Поле ввода ID
+local InputFrame = Instance.new("Frame")
+InputFrame.Size = UDim2.new(1, -20, 0, 40)
+InputFrame.Position = UDim2.new(0, 10, 0, 70)
+InputFrame.BackgroundColor3 = SAUL_COLORS.Search
+InputFrame.BorderSizePixel = 0
+InputFrame.Parent = MainFrame
+
+local InputCorner = Instance.new("UICorner")
+InputCorner.CornerRadius = UDim.new(0, 6)
+InputCorner.Parent = InputFrame
+
+local InputBox = Instance.new("TextBox")
+InputBox.Size = UDim2.new(1, -20, 1, -10)
+InputBox.Position = UDim2.new(0, 10, 0, 5)
+InputBox.BackgroundTransparency = 1
+InputBox.PlaceholderText = "Введите ID музыки..."
+InputBox.PlaceholderColor3 = Color3.fromRGB(150, 150, 170)
+InputBox.Text = ""
+InputBox.TextColor3 = SAUL_COLORS.Text
+InputBox.Font = Enum.Font.Gotham
+InputBox.TextSize = 14
+InputBox.TextXAlignment = Enum.TextXAlignment.Left
+InputBox.Parent = InputFrame
+
+-- Кнопка воспроизведения
+local PlayButton = Instance.new("TextButton")
+PlayButton.Size = UDim2.new(1, -20, 0, 40)
+PlayButton.Position = UDim2.new(0, 10, 0, 120)
+PlayButton.BackgroundColor3 = SAUL_COLORS.ButtonSuccess
+PlayButton.TextColor3 = SAUL_COLORS.Text
+PlayButton.Text = "▶️ ВОСПРОИЗВЕСТИ"
+PlayButton.Font = Enum.Font.GothamBold
+PlayButton.TextSize = 14
+PlayButton.Parent = MainFrame
+
+local PlayCorner = Instance.new("UICorner")
+PlayCorner.CornerRadius = UDim.new(0, 8)
+PlayCorner.Parent = PlayButton
+
+-- Кнопка остановки
+local StopButton = Instance.new("TextButton")
+StopButton.Size = UDim2.new(1, -20, 0, 40)
+StopButton.Position = UDim2.new(0, 10, 0, 170)
+StopButton.BackgroundColor3 = SAUL_COLORS.ButtonError
+StopButton.TextColor3 = SAUL_COLORS.Text
+StopButton.Text = "⏹️ ОСТАНОВИТЬ"
+StopButton.Font = Enum.Font.GothamBold
+StopButton.TextSize = 14
+StopButton.Parent = MainFrame
+
+local StopCorner = Instance.new("UICorner")
+StopCorner.CornerRadius = UDim.new(0, 8)
+StopCorner.Parent = StopButton
+
+-- Список песен
+local SongsLabel = Instance.new("TextLabel")
+SongsLabel.Size = UDim2.new(1, -20, 0, 20)
+SongsLabel.Position = UDim2.new(0, 10, 0, 220)
+SongsLabel.BackgroundTransparency = 1
+SongsLabel.Text = "📚 Библиотека песен:"
+SongsLabel.TextColor3 = SAUL_COLORS.Text
+SongsLabel.Font = Enum.Font.GothamBold
+SongsLabel.TextSize = 12
+SongsLabel.TextXAlignment = Enum.TextXAlignment.Left
+SongsLabel.Parent = MainFrame
+
+-- Фрейм для кнопок песен
+local SongsFrame = Instance.new("Frame")
+SongsFrame.Size = UDim2.new(1, -20, 0, 50)
+SongsFrame.Position = UDim2.new(0, 10, 0, 240)
+SongsFrame.BackgroundTransparency = 1
+SongsFrame.Parent = MainFrame
+
+-- Создаем кнопки для песен из библиотеки
+local function CreateSongButton(songId, songName, position)
+    local button = Instance.new("TextButton")
+    button.Size = UDim2.new(0.48, 0, 0, 40)
+    button.Position = position
+    button.BackgroundColor3 = SAUL_COLORS.Button
+    button.TextColor3 = SAUL_COLORS.Text
+    button.Text = songName
+    button.Font = Enum.Font.Gotham
+    button.TextSize = 11
+    button.TextWrapped = true
+    button.Parent = SongsFrame
+    
+    local corner = Instance.new("UICorner")
+    corner.CornerRadius = UDim.new(0, 6)
+    corner.Parent = button
+    
+    button.MouseButton1Click:Connect(function()
+        PlayMusic(songId, songName)
+        InputBox.Text = songId
+    end)
+    
+    return button
+end
+
+-- Добавляем песни из библиотеки
+local songIndex = 1
+for songId, songName in pairs(MusicLibrary) do
+    local position = UDim2.new(0, 0, 0, (songIndex-1)*45)
+    if songIndex > 1 then
+        position = UDim2.new(0.52, 0, 0, (songIndex-2)*45)
+    end
+    CreateSongButton(songId, songName, position)
+    songIndex = songIndex + 1
+end
+
+-- Обработчики событий
+PlayButton.MouseButton1Click:Connect(function()
+    local songId = InputBox.Text
+    if songId ~= "" then
+        local songName = MusicLibrary[songId] or "Custom Song"
+        PlayMusic(songId, songName)
+    end
+end)
+
+StopButton.MouseButton1Click:Connect(function()
+    if currentSound then
+        currentSound:Stop()
+        currentSound:Destroy()
+        currentSound = nil
+        print("⏹️ Музыка остановлена")
+    end
+end)
+
+-- Анимации
+PlayButton.MouseEnter:Connect(function()
+    TweenService:Create(PlayButton, TweenInfo.new(0.2), {
+        BackgroundColor3 = Color3.fromRGB(100, 220, 100)
+    }):Play()
+end)
+
+PlayButton.MouseLeave:Connect(function()
+    TweenService:Create(PlayButton, TweenInfo.new(0.2), {
+        BackgroundColor3 = SAUL_COLORS.ButtonSuccess
+    }):Play()
+end)
+
+StopButton.MouseEnter:Connect(function()
+    TweenService:Create(StopButton, TweenInfo.new(0.2), {
+        BackgroundColor3 = Color3.fromRGB(255, 100, 100)
+    }):Play()
+end)
+
+StopButton.MouseLeave:Connect(function()
+    TweenService:Create(StopButton, TweenInfo.new(0.2), {
+        BackgroundColor3 = SAUL_COLORS.ButtonError
+    }):Play()
+end)
+
+ScreenGui.Parent = game.CoreGui
+
+print("🎵 Saul Hub Music Player loaded!")
+print("📚 Available songs: Raining Tacos, Mystery Movie")
