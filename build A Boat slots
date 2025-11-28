@@ -1,0 +1,15 @@
+local slotsyouwant = 100 -- Put the amount of slots you want
+
+-- ignore
+for i = 1, slotsyouwant do
+    task.spawn(function()
+        local args = {
+            [1] = 1,
+            [2] = tostring(i) .. "\0", 
+            [3] = 0,
+            [4] = ""
+        }
+
+        workspace:WaitForChild("UpdateSlotOrderRE"):FireServer(unpack(args))
+    end)
+end
