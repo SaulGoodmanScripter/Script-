@@ -1,0 +1,33 @@
+-- 99 Nights in the forest - by Iliankytb адаптировано под Saul Hub
+local Players = game:GetService("Players")
+local RunService = game:GetService("RunService")
+local Workspace = game:GetService("Workspace")
+local LocalPlayer = Players.LocalPlayer
+local UserInputService = game:GetService("UserInputService")
+local MarketplaceService = game:GetService("MarketplaceService")
+
+-- Загружаем библиотеку Saul Hub
+local Library = loadstring(game:HttpGet("https://raw.githubusercontent.com/SaulGoodmanScripter/SAUL_HUB/refs/heads/main/Library%20.lua"))()
+local Window = Library:Window({
+    Title = "99 Nights in the Forest",
+    Desc = "by Iliankytb | V.0.33",
+    Icon = 92155476988079,
+    Theme = "Default",
+    Config = {
+        Keybind = Enum.KeyCode.K,
+        Size = UDim2.new(0, 550, 0, 350)
+    },
+    CloseUIButton = {
+        Enabled = true,
+        Text = "Закрыть"
+    }
+})
+
+-- Переменные (сохраняем ваши)
+local V = "V.0.33"
+local ActiveEspItems, ActiveDistanceEsp, ActiveEspEnemy, ActiveEspChildren, ActiveEspPeltTrader = false, false, false, false, false
+local ActivateFly, AlrActivatedFlyPC, ActiveNoCooldownPrompt, ActiveNoFog = false, false, false, false
+local ActiveAutoChopTree, ActiveKillAura, ActivateInfiniteJump, ActiveNoclip = false, false, false, false
+local ActiveSpeedBoost = false
+local DistanceForKillAura = 25
+local Distance
